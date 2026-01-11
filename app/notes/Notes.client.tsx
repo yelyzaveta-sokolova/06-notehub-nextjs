@@ -15,10 +15,11 @@ export default function NotesClient() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { data, isLoading } = useQuery({
-  queryKey: ["notes", page, search],
+  queryKey: ['notes', page, search],
   queryFn: () => fetchNotes(page, search),
-  placeholderData: (previousData) => previousData,
-});
+  placeholderData: (prev) => prev,
+})
+
 
 
   if (isLoading) return <p>Loading...</p>;
