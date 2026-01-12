@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Note } from '@/types/note'
+import type { Note } from '@/types/note'
 
 const api = axios.create({
   baseURL: 'https://notehub-api.goit.global',
@@ -8,7 +8,7 @@ const api = axios.create({
   },
 })
 
-export interface NotesResponse {
+interface NotesResponse {
   notes: Note[]
   totalPages: number
 }
@@ -18,8 +18,12 @@ export const fetchNotes = async (
   search: string
 ): Promise<NotesResponse> => {
   const { data } = await api.get<NotesResponse>('/notes', {
-    params: { page, search },
+    params: {
+      page,
+      search,
+    },
   })
+
   return data
 }
 
@@ -35,6 +39,7 @@ export const createNote = async (
   return data
 }
 
-export const deleteNote = async (id: string): Promise<void> => {
-  await api.delete(`/notes/${id}`)
+export const deleteNote = async (id: string): Promise<Note> => {
+  const { data } = await api.delete<Note>(`/notes/${id}`)
+  return data
 }
