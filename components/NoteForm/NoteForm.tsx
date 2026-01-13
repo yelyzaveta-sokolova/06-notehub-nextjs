@@ -5,6 +5,7 @@ import * as Yup from 'yup'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createNote } from '@/lib/api'
 import type { Note } from '@/types/note'
+import styles from './NoteForm.module.css'
 
 type Tag = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping'
 
@@ -26,7 +27,7 @@ const validationSchema = Yup.object({
 
   content: Yup.string()
     .max(500, 'Content must be at most 500 characters')
-    .optional(),
+    .notRequired(),
 
   tag: Yup.mixed<Tag>()
     .oneOf(['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'])
@@ -61,38 +62,62 @@ export default function NoteForm({ close }: NoteFormProps) {
       validationSchema={validationSchema}
       onSubmit={(values) => mutation.mutate(values)}
     >
-      <Form>
-        <div>
+      <Form className={styles.form}>
+        <div className={styles.formGroup}>
           <label htmlFor="title">Title</label>
-          <Field id="title" name="title" />
-          <ErrorMessage name="title" component="div" />
+          <Field id="title" name="title" className={styles.input} />
+          <ErrorMessage name="title" component="div" className={styles.error} />
         </div>
 
-        <div>
+        <div className={styles.formGroup}>
           <label htmlFor="content">Content</label>
-          <Field id="content" name="content" as="textarea" />
-          <ErrorMessage name="content" component="div" />
+          <Field
+            id="content"
+            name="content"
+            as="textarea"
+            className={styles.textarea}
+          />
+          <ErrorMessage
+            name="content"
+            component="div"
+            className={styles.error}
+          />
         </div>
 
-        <div>
+        <div className={styles.formGroup}>
           <label htmlFor="tag">Tag</label>
-          <Field id="tag" name="tag" as="select">
+          <Field
+            id="tag"
+            name="tag"
+            as="select"
+            className={styles.select}
+          >
             <option value="Todo">Todo</option>
             <option value="Work">Work</option>
             <option value="Personal">Personal</option>
             <option value="Meeting">Meeting</option>
             <option value="Shopping">Shopping</option>
           </Field>
-          <ErrorMessage name="tag" component="div" />
+          <ErrorMessage name="tag" component="div" className={styles.error} />
         </div>
 
-        <button type="submit" disabled={mutation.isPending}>
-          Create note
-        </button>
+        <div className={styles.actions}>
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={mutation.isPending}
+          >
+            Create note
+          </button>
 
-        <button type="button" onClick={close}>
-          Cancel
-        </button>
+          <button
+            type="button"
+            className={styles.cancelButton}
+            onClick={close}
+          >
+            Cancel
+          </button>
+        </div>
       </Form>
     </Formik>
   )

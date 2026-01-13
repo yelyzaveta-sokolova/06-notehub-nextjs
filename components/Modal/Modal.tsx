@@ -1,34 +1,49 @@
-"use client";
+'use client'
 
-import { ReactNode, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { ReactNode, useEffect } from 'react'
+import { createPortal } from 'react-dom'
+import styles from './Modal.module.css'
 
 interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: ReactNode;
+  isOpen: boolean
+  onClose: () => void
+  children: ReactNode
 }
 
 export default function Modal({ isOpen, onClose, children }: ModalProps) {
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) return
 
-    const onEsc = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onEsc);
-    document.body.style.overflow = "hidden";
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleEsc)
 
     return () => {
-      document.removeEventListener("keydown", onEsc);
-      document.body.style.overflow = "";
-    };
-  }, [isOpen, onClose]);
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleEsc)
+    }
+  }, [isOpen, onClose])
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return createPortal(
-    <div onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()}>{children}</div>
+    <div
+      className={styles.backdrop}
+      onClick={e => {
+        if (e.target === e.currentTarget) {
+          onClose()
+        }
+      }}
+    >
+      <div className={styles.modal}>
+        {children}
+      </div>
     </div>,
     document.body
-  );
+  )
 }

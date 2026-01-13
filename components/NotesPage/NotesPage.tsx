@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { fetchNotes } from '@/lib/api'
 import { Note } from '@/types/note'
+import styles from './NotesPage.module.css'
 
 import NoteList from '../NoteList/NoteList'
 import Pagination from '../Pagination/Pagination'
@@ -45,8 +46,15 @@ export default function NotesPage() {
     <>
       <SearchBox value={search} onChange={handleSearchChange} />
 
-      <button onClick={() => setIsOpen(true)}>Add note</button>
-
+            <div className={styles.container}>
+        <button
+          type="button"
+          className={styles.addButton}
+          onClick={() => setIsOpen(true)}
+        >
+          Add note
+        </button>
+      </div>
       <NoteList notes={data.notes} />
 
       <Pagination
